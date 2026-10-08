@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" width="880" height="420" role="img" aria-label="RAG 检索问答流程：文档解析分块、向量化入库、检索评分、改写重试、生成答案并溯源">
+  <defs>
+    <linearGradient id="ragAccent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#7c3aed" />
+    </linearGradient>
+    <marker id="ragArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0 0 L8 3 L0 6 Z" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <style>
+    .lbl { font-family: ui-sans-serif, system-ui, "Segoe UI", "Helvetica Neue", sans-serif; fill: #e2e8f0; }
+    .ttl { font-family: ui-sans-serif, system-ui, "Segoe UI", "Helvetica Neue", sans-serif; font-size: 15px; font-weight: 600; fill: #0f172a; }
+    .sub { font-family: ui-sans-serif, system-ui, "Segoe UI", "Helvetica Neue", sans-serif; font-size: 12px; fill: #475569; }
+    .ttl-dark { fill: #0f172a; }
+    .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+    .box-alt { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; }
+    .flow { stroke: #94a3b8; stroke-width: 2; fill: none; marker-end: url(#ragArrow); }
+    .loop { stroke: #f59e0b; stroke-width: 2; fill: none; stroke-dasharray: 6 5; marker-end: url(#ragArrow); }
+    .band { fill: #f1f5f9; stroke: #e2e8f0; stroke-width: 1; }
+    .bandText { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .08em; fill: #64748b; }
+  </style>
+
+  <rect width="880" height="420" fill="#ffffff" />
+
+  <!-- 阶段分区 -->
+  <rect class="band" x="24" y="24" width="832" height="150" rx="12" />
+  <text class="bandText" x="44" y="48">索引阶段 · OFFLINE</text>
+
+  <rect class="band" x="24" y="196" width="832" height="200" rx="12" fill="#f8fafc" stroke="#e2e8f0" />
+  <text class="bandText" x="44" y="220">查询阶段 · ONLINE</text>
+
+  <!-- 索引阶段节点 -->
+  <rect class="box" x="60" y="72" width="160" height="72" rx="10" />
+  <text class="ttl" x="140" y="103" text-anchor="middle">文档来源</text>
+  <text class="sub" x="140" y="123" text-anchor="middle">Markdown / HTML / PDF</text>
+
+  <rect class="box" x="272" y="72" width="160" height="72" rx="10" />
+  <text class="ttl" x="352" y="103" text-anchor="middle">结构化分块</text>
+  <text class="sub" x="352" y="123" text-anchor="middle">按标题层级切分</text>
+
+  <rect class="box" x="484" y="72" width="160" height="72" rx="10" />
+  <text class="ttl" x="564" y="103" text-anchor="middle">向量化</text>
+  <text class="sub" x="564" y="123" text-anchor="middle">Embedding 模型</text>
+
+  <rect class="box" x="696" y="72" width="140" height="72" rx="10" />
+  <text class="ttl" x="766" y="103" text-anchor="middle">向量库</text>
+  <text class="sub" x="766" y="123" text-anchor="middle">Qdrant + 元数据</text>
+
+  <path class="flow" d="M220 108 H266" />
+  <path class="flow" d="M432 108 H478" />
+  <path class="flow" d="M644 108 H690" />
+
+  <!-- 查询阶段节点 -->
+  <rect class="box" x="60" y="252" width="150" height="72" rx="10" />
+  <text class="ttl" x="135" y="283" text-anchor="middle">用户问题</text>
+  <text class="sub" x="135" y="303" text-anchor="middle">自然语言查询</text>
+
+  <rect class="box-alt" x="248" y="252" width="150" height="72" rx="10" />
+  <text class="ttl" x="323" y="283" text-anchor="middle">召回</text>
+  <text class="sub" x="323" y="303" text-anchor="middle">Top-K 相似片段</text>
+
+  <rect class="box-alt" x="436" y="252" width="150" height="72" rx="10" />
+  <text class="ttl" x="511" y="283" text-anchor="middle">相关性评分</text>
+  <text class="sub" x="511" y="303" text-anchor="middle">独立模型打分</text>
+
+  <rect class="box-alt" x="624" y="252" width="150" height="72" rx="10" />
+  <text class="ttl" x="699" y="283" text-anchor="middle">生成答案</text>
+  <text class="sub" x="699" y="303" text-anchor="middle">附来源章节</text>
+
+  <path class="flow" d="M210 288 H242" />
+  <path class="flow" d="M398 288 H430" />
+  <path class="flow" d="M586 288 H618" />
+
+  <!-- 检索命中向量库 -->
+  <path class="flow" d="M766 144 V214 H323 V246" />
+
+  <!-- 改写重试闭环 -->
+  <rect class="box" x="392" y="352" width="200" height="34" rx="17" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5" />
+  <text class="sub" x="492" y="374" text-anchor="middle" fill="#b45309">评分不足 → 改写查询重试（上限 2 次）</text>
+  <path class="loop" d="M511 324 V348" />
+  <path class="loop" d="M392 369 H323 V330" />
+
+  <!-- 溯源标注 -->
+  <path class="flow" d="M699 324 V369 H760 V340" stroke-dasharray="4 4" />
+  <rect class="box" x="716" y="316" width="128" height="24" rx="12" fill="#eef2ff" stroke="#6366f1" stroke-width="1.2" />
+  <text class="sub" x="780" y="332" text-anchor="middle" fill="#4338ca">标题路径溯源</text>
+</svg>

@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460" width="900" height="460" role="img" aria-label="LangGraph 检索问答状态机：START 到 retrieve 到 grade，条件分支到 rewrite 或 generate，write 回边重新检索，最终 END">
+  <defs>
+    <marker id="lgArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0 0 L8 3 L0 6 Z" fill="#94a3b8" />
+    </marker>
+    <marker id="lgArrowAmber" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0 0 L8 3 L0 6 Z" fill="#f59e0b" />
+    </marker>
+    <marker id="lgArrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0 0 L8 3 L0 6 Z" fill="#10b981" />
+    </marker>
+  </defs>
+
+  <style>
+    .n { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.6; }
+    .nStart { fill: #ecfdf5; stroke: #10b981; stroke-width: 1.6; }
+    .nEnd { fill: #eef2ff; stroke: #6366f1; stroke-width: 1.6; }
+    .nLoop { fill: #fffbeb; stroke: #f59e0b; stroke-width: 1.6; }
+    .t { font-family: ui-sans-serif, system-ui, "Segoe UI", sans-serif; font-size: 14px; font-weight: 600; fill: #0f172a; }
+    .s { font-family: ui-sans-serif, system-ui, "Segoe UI", sans-serif; font-size: 11.5px; fill: #475569; }
+    .edge { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: #64748b; }
+    .path { stroke: #94a3b8; stroke-width: 2; fill: none; marker-end: url(#lgArrow); }
+    .pathAmber { stroke: #f59e0b; stroke-width: 2; fill: none; stroke-dasharray: 6 5; marker-end: url(#lgArrowAmber); }
+    .pathGreen { stroke: #10b981; stroke-width: 2; fill: none; marker-end: url(#lgArrowGreen); }
+    .lbl { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 10.5px; font-weight: 600; letter-spacing: .08em; fill: #94a3b8; }
+  </style>
+
+  <rect width="900" height="460" fill="#ffffff" />
+  <text class="lbl" x="30" y="34">STATE GRAPH · QAState</text>
+
+  <!-- START -->
+  <rect class="nStart" x="30" y="120" width="110" height="56" rx="28" />
+  <text class="t" x="85" y="145" text-anchor="middle">START</text>
+  <text class="s" x="85" y="163" text-anchor="middle">question</text>
+
+  <!-- retrieve -->
+  <rect class="n" x="196" y="112" width="150" height="72" rx="10" />
+  <text class="t" x="271" y="142" text-anchor="middle">retrieve</text>
+  <text class="s" x="271" y="161" text-anchor="middle">多查询召回 + 去重</text>
+
+  <!-- grade -->
+  <rect class="n" x="402" y="112" width="150" height="72" rx="10" />
+  <text class="t" x="477" y="142" text-anchor="middle">grade</text>
+  <text class="s" x="477" y="161" text-anchor="middle">相关性评分 0~1</text>
+
+  <!-- generate -->
+  <rect class="nEnd" x="700" y="112" width="160" height="72" rx="10" />
+  <text class="t" x="780" y="142" text-anchor="middle">generate</text>
+  <text class="s" x="780" y="161" text-anchor="middle">生成答案 + 来源</text>
+
+  <!-- rewrite -->
+  <rect class="nLoop" x="196" y="300" width="150" height="72" rx="10" />
+  <text class="t" x="271" y="330" text-anchor="middle">rewrite</text>
+  <text class="s" x="271" y="349" text-anchor="middle">改写查询 / retries += 1</text>
+
+  <!-- END -->
+  <rect class="nEnd" x="700" y="300" width="160" height="56" rx="28" />
+  <text class="t" x="780" y="334" text-anchor="middle">END</text>
+
+  <!-- edges -->
+  <path class="path" d="M140 148 H190" />
+  <path class="path" d="M346 148 H396" />
+
+  <!-- 条件边：score >= 0.7 -->
+  <path class="pathGreen" d="M552 136 C620 136, 640 148, 694 148" />
+  <text class="edge" x="620" y="128" text-anchor="middle" fill="#047857">score ≥ 0.7</text>
+
+  <!-- 条件边：重试 -->
+  <path class="pathAmber" d="M470 184 C470 260, 380 270, 330 296" />
+  <text class="edge" x="428" y="248" text-anchor="middle" fill="#b45309">score &lt; 0.7 且 retries &lt; 2</text>
+
+  <!-- 回边 rewrite -> retrieve -->
+  <path class="pathAmber" d="M271 300 V240 H271 V190" />
+  <text class="edge" x="300" y="222" fill="#b45309">重新检索</text>
+
+  <!-- 强制出口 -->
+  <path class="path" d="M346 336 C520 336, 600 336, 694 334" />
+  <text class="edge" x="520" y="326" text-anchor="middle">retries ≥ 2（硬性出口）</text>
+
+  <path class="path" d="M780 184 V296" />
+  <text class="edge" x="800" y="244" fill="#4338ca">answer / sources</text>
+</svg>

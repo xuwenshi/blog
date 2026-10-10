@@ -43,9 +43,9 @@ export default function PostList({ posts }: { posts: PostMeta[] }) {
           type="button"
           onClick={() => setActiveTag(null)}
           aria-pressed={activeTag === null}
-          className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+          className={`inline-flex min-h-11 items-center rounded-full border px-3.5 text-xs font-medium transition-colors ${
             activeTag === null
-              ? "border-accent bg-accent text-white"
+              ? "border-accent bg-accent text-on-accent"
               : "border-border bg-surface text-muted hover:text-foreground"
           }`}
         >
@@ -58,9 +58,9 @@ export default function PostList({ posts }: { posts: PostMeta[] }) {
             type="button"
             onClick={() => setActiveTag(tag)}
             aria-pressed={activeTag === tag}
-            className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+            className={`inline-flex min-h-11 items-center rounded-full border px-3.5 text-xs font-medium transition-colors ${
               activeTag === tag
-                ? "border-accent bg-accent text-white"
+                ? "border-accent bg-accent text-on-accent"
                 : "border-border bg-surface text-muted hover:text-foreground"
             }`}
           >

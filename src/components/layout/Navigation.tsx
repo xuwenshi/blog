@@ -49,7 +49,8 @@ export default function Navigation({ links }: { links: NavLink[] }) {
 
   const desktopLinkClass = (href: string) =>
     [
-      "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+      // min-h-11：文字链接的触控命中区域达到 44px 高（WCAG 2.5.5）
+      "inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium transition-colors",
       isActive(href)
         ? "text-foreground"
         : "text-muted hover:text-foreground hover:bg-surface",
@@ -57,7 +58,7 @@ export default function Navigation({ links }: { links: NavLink[] }) {
 
   const mobileLinkClass = (href: string) =>
     [
-      "block rounded-md px-3 py-2.5 text-base font-medium transition-colors",
+      "flex min-h-11 items-center rounded-md px-3 py-2.5 text-base font-medium transition-colors",
       isActive(href)
         ? "bg-surface text-foreground"
         : "text-muted hover:bg-surface hover:text-foreground",
@@ -96,7 +97,7 @@ export default function Navigation({ links }: { links: NavLink[] }) {
         aria-expanded={open}
         aria-controls="mobile-nav"
         aria-label={open ? "关闭菜单" : "打开菜单"}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted transition-colors hover:bg-surface hover:text-foreground md:hidden"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border text-muted transition-colors hover:bg-surface hover:text-foreground md:hidden"
       >
         {open ? <CloseIcon width={18} height={18} /> : <MenuIcon width={18} height={18} />}
       </button>

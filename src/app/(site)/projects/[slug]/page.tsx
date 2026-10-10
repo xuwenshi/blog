@@ -99,7 +99,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     href={project.github}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
+                    className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-accent-hover"
                   >
                     <GithubIcon width={15} height={15} />
                     查看源码

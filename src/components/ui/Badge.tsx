@@ -18,6 +18,15 @@ export function Chip({
   );
 }
 
+/** 技术栈 / 技能标签：等宽字体的小方块，about 与 resume 共用同一份样式 */
+export function TechChip({ children }: { children: ReactNode }) {
+  return (
+    <span className="inline-flex items-center rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-muted">
+      {children}
+    </span>
+  );
+}
+
 /** 可点击的标签（用于标签筛选） */
 export function TagLink({ tag }: { tag: string }) {
   return (
@@ -37,10 +46,19 @@ const STATUS_LABELS: Record<string, string> = {
   archived: "已归档",
 };
 
+/**
+ * 项目状态徽标配色。
+ *
+ * 全部走语义令牌（success / warning / accent），不再硬编码 emerald / amber / sky：
+ * ① 浅色与深色两套值在 globals.css 里各定义一次，这里只表达「语义」；
+ * ② 换主题时不会再出现「某个 chip 忘了跟着改」的漂移。
+ * 「已完成」用 accent 而不是 error —— 完成是中性偏正面的状态，
+ * 红色会误导成出错；error 令牌留给真正的错误界面（app/error.tsx）。
+ */
 const STATUS_STYLES: Record<string, string> = {
-  active: "border-emerald-500/35 text-emerald-600 dark:text-emerald-400",
-  "in-progress": "border-amber-500/35 text-amber-600 dark:text-amber-400",
-  completed: "border-sky-500/35 text-sky-600 dark:text-sky-400",
+  active: "border-success/35 text-success",
+  "in-progress": "border-warning/35 text-warning",
+  completed: "border-accent/35 text-accent",
   archived: "border-border text-muted",
 };
 

@@ -319,7 +319,7 @@ export default function CentralPlanet() {
         <span className="text-lg font-semibold tracking-tight text-cosmic-text sm:text-xl">
           进入我的宇宙
         </span>
-        <span className="text-[0.7rem] font-medium uppercase tracking-[0.28em] text-cosmic-muted transition-colors group-hover:text-cosmic-ice group-focus-visible:text-cosmic-ice sm:text-xs">
+        <span className="text-xs font-medium uppercase tracking-[0.28em] text-cosmic-muted transition-colors group-hover:text-cosmic-ice group-focus-visible:text-cosmic-ice">
           Enter the universe
         </span>
       </span>

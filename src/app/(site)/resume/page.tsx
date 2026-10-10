@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import SectionIntro from "@/components/cosmic/SectionIntro";
+import { TechChip } from "@/components/ui/Badge";
 import {
   CheckCircleIcon,
   DownloadIcon,
@@ -29,7 +30,7 @@ export default function ResumePage() {
           {siteConfig.resumePdfAvailable ? (
             <a
               href="/resume.pdf"
-              className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
+              className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-accent-hover"
             >
               <DownloadIcon width={15} height={15} />
               下载 PDF
@@ -123,9 +124,7 @@ export default function ResumePage() {
                 <ul className="flex flex-wrap gap-1.5">
                   {group.items.map((item) => (
                     <li key={item}>
-                      <span className="inline-flex items-center rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-muted">
-                        {item}
-                      </span>
+                      <TechChip>{item}</TechChip>
                     </li>
                   ))}
                 </ul>

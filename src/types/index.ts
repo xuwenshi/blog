@@ -19,6 +19,10 @@ export type PostMeta = {
   tags: string[];
   category: string;
   cover?: string;
+  /** 封面图原始像素宽度（仅当能从本地 SVG 解析出时才存在） */
+  coverWidth?: number;
+  /** 封面图原始像素高度（仅当能从本地 SVG 解析出时才存在） */
+  coverHeight?: number;
   draft: boolean;
   /** 预计阅读时间（分钟） */
   readingTime: number;

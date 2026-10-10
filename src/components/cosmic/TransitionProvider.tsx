@@ -63,7 +63,9 @@ export function useCosmicTransition(): TransitionContextValue {
 
 /** 常规时长（未开启 reduced-motion） */
 const DURATIONS = {
-  warp: { cover: 460, reveal: 420 },
+  // warp 的 cover + reveal 刻意压在 0.7s 以内：穿越感由缩放与缓动表达，
+  // 而不是靠拉长时间；一旦超过 0.7s，连续导航（入口 → 星图 → 分区）会明显发钝。
+  warp: { cover: 380, reveal: 300 },
   soft: { cover: 240, reveal: 240 },
 } as const;
 
@@ -162,6 +164,20 @@ export default function TransitionProvider({ children }: { children: ReactNode }
     const timer = setTimeout(() => setStatus("idle"), revealDuration);
     return () => clearTimeout(timer);
   }, [status, revealDuration]);
+
+  /*
+   * 回到 idle 时，把「上一次转场的出发页」同步为当前页。
+   *
+   * 为什么必须有这一条：startPathRef 只在 start() 里被写成出发页，
+   * 一次 A → B 的转场结束后它仍然停在 A。此时用户按浏览器后退回到 A，
+   * 下面那条外部导航副作用会命中 `pathname === startPathRef.current`
+   * 而直接 return，于是后退全程静默（status 恒为 idle）。
+   * 把基准点推进到「当前页」，后退才会被识别成一次真实的路径变化。
+   */
+  useEffect(() => {
+    if (status !== "idle") return;
+    startPathRef.current = pathRef.current;
+  }, [status]);
 
   /* 硬安全超时：任何异常都不会让遮罩永久停留 */
   useEffect(() => {

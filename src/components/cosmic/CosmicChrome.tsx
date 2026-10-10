@@ -14,7 +14,7 @@ import { siteConfig } from "@/lib/site";
  */
 export default function CosmicChrome() {
   const navLinkClass =
-    "rounded-md px-3 py-2 text-xs font-medium uppercase tracking-[0.16em] text-cosmic-muted transition-colors hover:text-cosmic-text";
+    "inline-flex min-h-11 items-center rounded-md px-3 text-xs font-medium uppercase tracking-[0.16em] text-cosmic-muted transition-colors hover:text-cosmic-text";
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-30 bg-gradient-to-b from-cosmic-void/85 to-transparent">
@@ -26,7 +26,7 @@ export default function CosmicChrome() {
         <CosmicLink
           href="/"
           variant="warp"
-          className="pointer-events-auto rounded-md text-sm font-semibold tracking-tight text-cosmic-text transition-opacity hover:opacity-80"
+          className="pointer-events-auto inline-flex min-h-11 items-center rounded-md text-sm font-semibold tracking-tight text-cosmic-text transition-opacity hover:opacity-80"
         >
           {siteConfig.name}
         </CosmicLink>

@@ -128,7 +128,9 @@ export async function getAllGoals(): Promise<Goal[]> {
   return Promise.all(
     parsed.map(async ({ meta, body }) => ({
       ...meta,
-      html: await renderMarkdown(body),
+      // 正文嵌在卡片里（分组 h2 → 卡片标题 h3），Markdown 标题要降到卡片标题之下，
+      // 所以整体下移两级：正文里的 ## 变成 h4，### 变成 h5。
+      html: await renderMarkdown(body, { headingOffset: 2 }),
       headings: extractHeadings(body),
     })),
   );

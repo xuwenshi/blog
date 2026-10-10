@@ -19,7 +19,7 @@ export default function Navbar() {
       >
         <CosmicLink
           href="/"
-          className="rounded-md text-base font-semibold tracking-tight text-foreground"
+          className="inline-flex min-h-11 items-center rounded-md text-base font-semibold tracking-tight text-foreground"
         >
           {siteConfig.name}
         </CosmicLink>

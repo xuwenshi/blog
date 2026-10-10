@@ -32,14 +32,15 @@ function readTheme(): Theme {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (isTheme(stored)) return stored;
   } catch {
-    // 隐私模式下访问 localStorage 可能抛错，退回到「跟随系统」
+    // 隐私模式下访问 localStorage 可能抛错，退回到默认主题
   }
-  return "system";
+  // 与 layout 的 themeInitScript 保持一致：首次访问默认深色（宇宙）
+  return "dark";
 }
 
-/** 服务端与 hydration 阶段统一返回 "system"，避免首屏不一致 */
+/** 服务端与 hydration 阶段返回默认主题 "dark"，让首屏图标与最常见的实际状态吻合 */
 function readServerTheme(): Theme {
-  return "system";
+  return "dark";
 }
 
 function subscribeTheme(onChange: () => void) {
@@ -71,6 +72,10 @@ export default function ThemeToggle() {
           window.matchMedia("(prefers-color-scheme: dark)").matches);
       root.classList.toggle("dark", isDark);
       root.style.colorScheme = isDark ? "dark" : "light";
+      // 同步浏览器界面配色：主题由 class 决定，媒体查询的 meta 猜不准
+      for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
+        meta.setAttribute("content", isDark ? "#060a18" : "#ffffff");
+      }
     };
 
     sync();
@@ -98,7 +103,7 @@ export default function ThemeToggle() {
       onClick={cycle}
       aria-label={`切换主题（当前：${LABELS[theme]}）`}
       title={`主题：${LABELS[theme]}，点击切换`}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted transition-colors hover:bg-surface hover:text-foreground"
+      className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border text-muted transition-colors hover:bg-surface hover:text-foreground"
     >
       <Icon width={17} height={17} />
     </button>

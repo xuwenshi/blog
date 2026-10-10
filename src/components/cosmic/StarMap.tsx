@@ -87,7 +87,7 @@ export default function StarMap() {
                     <span className="text-base font-semibold tracking-tight text-cosmic-text transition-colors group-hover:text-cosmic-ice">
                       {section.name}
                     </span>
-                    <span className="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-cosmic-muted">
+                    <span className="text-xs font-medium uppercase tracking-[0.22em] text-cosmic-muted">
                       {section.latin}
                     </span>
                     <span className="max-w-[15rem] text-xs leading-relaxed text-cosmic-muted">
@@ -115,7 +115,7 @@ export default function StarMap() {
               <span className="flex-1">
                 <span className="block text-base font-medium text-cosmic-text">
                   {section.name}
-                  <span className="ml-2 text-[0.65rem] font-medium uppercase tracking-[0.18em] text-cosmic-muted">
+                  <span className="ml-2 text-xs font-medium uppercase tracking-[0.18em] text-cosmic-muted">
                     {section.latin}
                   </span>
                 </span>

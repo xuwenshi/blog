@@ -185,6 +185,18 @@ export const heroPlanet: PlanetPalette = {
 export const heroAccent = "#8fe3ff";
 
 /**
+ * 「关于」的页头元信息。
+ *
+ * 它不是一颗行星（星图上没有它），但同样属于「行星内部」的分区页，
+ * 需要用同一套节头语言（返回星图 + eyebrow + 入场动效），
+ * 所以这里给它一份与分区同构的最小描述，避免在页面里散落魔法色值。
+ */
+export const aboutMeta: Pick<CosmicSection, "latin" | "accent"> = {
+  latin: "ABOUT",
+  accent: "#c9b6ff", // = --cosmic-violet
+};
+
+/**
  * 首页「快速导航」与星图的共用入口列表。
  * 除五大分区外额外包含「关于」——它是既有页面，但不作为一颗行星出现在星图上。
  */
@@ -194,5 +206,5 @@ export const cosmicQuickNav: { href: string; label: string; latin: string }[] = 
     label: section.name,
     latin: section.latin,
   })),
-  { href: "/about", label: "关于", latin: "ABOUT" },
+  { href: "/about", label: "关于", latin: aboutMeta.latin },
 ];

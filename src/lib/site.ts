@@ -102,6 +102,7 @@ export const siteConfig: SiteConfig = {
     { href: "/projects", label: "项目" },
     { href: "/diary", label: "日记" },
     { href: "/goals", label: "目标" },
+    { href: "/resume", label: "简历" },
     { href: "/about", label: "关于" },
   ],
 

@@ -132,12 +132,16 @@ export default async function PostPage({ params }: PostPageProps) {
               {/* frontmatter 里的 cover 作为文章头图展示 */}
               {post.cover ? (
                 // 用原生 img 而不是 next/image：图片路径写在 Markdown / frontmatter 里，
-                // 无法预知尺寸，交给浏览器按原始比例渲染反而更简单
+                // 无法预知尺寸，交给浏览器按原始比例渲染反而更简单。
+                // width / height 来自构建期对本地 SVG 的解析（见 lib/posts.ts），
+                // 让浏览器在图片到达前就按正确比例预留空间，消除布局偏移（CLS）。
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={post.cover}
                   alt={post.title}
-                  className="mt-6 w-full rounded-xl border border-border"
+                  width={post.coverWidth}
+                  height={post.coverHeight}
+                  className="mt-6 h-auto w-full rounded-xl border border-border"
                 />
               ) : null}
             </header>

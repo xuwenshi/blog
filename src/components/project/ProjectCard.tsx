@@ -1,34 +1,44 @@
 import CosmicLink from "@/components/cosmic/CosmicLink";
 import { Chip, StatusBadge } from "@/components/ui/Badge";
 import { ArrowRightIcon, ExternalLinkIcon, GithubIcon } from "@/components/ui/Icons";
-import { hueFromSlug } from "@/lib/format";
 import type { ProjectMeta } from "@/types";
 
 /**
  * 项目卡片。
- * 封面使用「由 slug 推导出的稳定渐变 + 首字母」，不依赖任何外部图片资源，
- * 保持仓库轻量，也避免图片加载失败。
+ *
+ * 封面不用真实图片：改由「统一的深空底 + 主强调色柔光 + 项目首字母」构成。
+ * 早先的版本按 slug 哈希出随机色相，问题有两个：
+ * ① 卡片之间颜色互不相关，视觉上像拼贴，破坏设计系统的一致性；
+ * ② 随机色相里的深色配白字，没有经过对比度校验。
+ * 现在封面色走宇宙层恒定令牌（--cosmic-deep / --cosmic-void / --cosmic-text），
+ * 无论 Light 还是 Dark 主题都是同一块深空底，白字对比度稳定在 17:1 以上。
  */
 export default function ProjectCard({ project }: { project: ProjectMeta }) {
-  const hue = hueFromSlug(project.slug);
-
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-elevated transition-colors hover:border-accent/50">
       <div
-        className="relative flex h-28 items-center justify-between px-5"
+        className="relative flex h-28 items-center justify-between overflow-hidden px-5"
         style={{
-          backgroundImage: `linear-gradient(135deg, hsl(${hue} 65% 46%), hsl(${
-            (hue + 48) % 360
-          } 60% 32%))`,
+          backgroundImage:
+            "linear-gradient(135deg, var(--cosmic-deep), var(--cosmic-void))",
         }}
       >
+        {/* 主强调色的柔光，给统一的深空底一点层次，不改变整体一致性 */}
         <span
           aria-hidden
-          className="text-4xl font-bold text-white/90 drop-shadow-sm"
+          className="absolute inset-0 opacity-[0.18]"
+          style={{
+            backgroundImage:
+              "radial-gradient(120% 130% at 18% 0%, var(--accent), transparent 58%)",
+          }}
+        />
+        <span
+          aria-hidden
+          className="relative text-4xl font-bold text-cosmic-text drop-shadow-sm"
         >
           {project.name.slice(0, 1).toUpperCase()}
         </span>
-        <span className="rounded-full border border-white/30 bg-white/10 px-2.5 py-0.5 text-xs font-medium text-white/90 backdrop-blur">
+        <span className="relative rounded-full border border-cosmic-line bg-white/[0.06] px-2.5 py-0.5 text-xs font-medium text-cosmic-text backdrop-blur">
           {project.period ?? "项目"}
         </span>
       </div>

@@ -37,9 +37,11 @@ export default function CosmicHomePage() {
         <Starfield />
 
         <div className="relative z-10 flex flex-col items-center text-center">
-          <p className="text-[0.7rem] font-medium uppercase tracking-[0.3em] text-cosmic-muted sm:text-xs">
+          {/* 首屏唯一的一级标题：本站是「作者的个人宇宙」，作者名与身份就是页面主题。
+              之前这里是一个 <p>，导致 / 整页没有 h1，标题大纲从二级开始。 */}
+          <h1 className="text-xs font-medium uppercase tracking-[0.3em] text-cosmic-muted">
             {siteConfig.author} · {siteConfig.role}
-          </p>
+          </h1>
 
           <div className="mt-8 sm:mt-10">
             <CentralPlanet />
@@ -74,7 +76,7 @@ export default function CosmicHomePage() {
                       <span className="block text-sm font-medium text-cosmic-text">
                         {item.label}
                       </span>
-                      <span className="block text-[0.65rem] font-medium uppercase tracking-[0.18em] text-cosmic-muted">
+                      <span className="block text-xs font-medium uppercase tracking-[0.18em] text-cosmic-muted">
                         {item.latin}
                       </span>
                     </span>

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 import CosmicLink from "@/components/cosmic/CosmicLink";
-import PageHeader from "@/components/ui/PageHeader";
+import SectionIntro from "@/components/cosmic/SectionIntro";
+import { TechChip } from "@/components/ui/Badge";
 import {
-  ArrowLeftIcon,
   ArrowRightIcon,
   CheckCircleIcon,
   GithubIcon,
@@ -11,6 +11,7 @@ import {
   MailIcon,
   MapPinIcon,
 } from "@/components/ui/Icons";
+import { aboutMeta } from "@/lib/cosmic";
 import { getAllCategories, getAllPosts } from "@/lib/posts";
 import { getAllProjects } from "@/lib/projects";
 import { siteConfig } from "@/lib/site";
@@ -28,22 +29,13 @@ export default function AboutPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-      <CosmicLink
-        href="/universe"
-        variant="warp"
-        className="cosmic-enter inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-foreground"
-      >
-        <ArrowLeftIcon width={15} height={15} />
-        返回星图
-      </CosmicLink>
-
-      <div className="mt-6">
-        <PageHeader
-          eyebrow="About"
-          title={`关于 ${siteConfig.author}`}
-          description={siteConfig.role}
-        />
-      </div>
+      {/* 与其它分区页共用同一套页头（返回星图 + eyebrow + 入场动效），
+          不再自己拼一遍「返回星图」链接 + 一个纯文本页头 */}
+      <SectionIntro
+        section={aboutMeta}
+        title={`关于 ${siteConfig.author}`}
+        description={siteConfig.role}
+      />
 
       {/* 概览数字 */}
       <dl className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -142,9 +134,7 @@ export default function AboutPage() {
               <ul className="mt-3 flex flex-wrap gap-1.5">
                 {group.items.map((item) => (
                   <li key={item}>
-                    <span className="inline-flex items-center rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-muted">
-                      {item}
-                    </span>
+                    <TechChip>{item}</TechChip>
                   </li>
                 ))}
               </ul>
@@ -213,7 +203,7 @@ export default function AboutPage() {
         <div className="flex flex-wrap items-center gap-3">
           <CosmicLink
             href="/resume"
-            className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
+            className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-hover"
           >
             查看简历
             <ArrowRightIcon width={15} height={15} />

@@ -42,7 +42,7 @@ export default function UniversePage() {
             返回星海入口
           </CosmicLink>
 
-          <p className="mt-6 inline-flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-cosmic-ice">
+          <p className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.28em] text-cosmic-ice">
             <span aria-hidden className="cosmic-pulse h-1.5 w-1.5 rounded-full bg-cosmic-ice" />
             Star Map
           </p>

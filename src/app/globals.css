@@ -5,7 +5,17 @@
    这样用户可以在 Light / Dark / System 之间自由选择。 */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ---------------------------------------------------------------------------
+   设计令牌 · 唯一语义来源
+   分三层，职责不重叠：
+     ① 「短名」—— 字面量所在处，既有 Tailwind 工具类（bg-surface 等）依赖它
+     ② 「规范名」--color-* —— 任务书要求的语义命名，指向短名，新增代码优先用它
+     ③ 「@theme」—— 把需要工具类化的令牌暴露给 Tailwind
+   规范名引用短名而不是反过来，这样既有的 background/surface/accent 等工具类
+   完全不受影响，改色时只需要动字面量一处。
+--------------------------------------------------------------------------- */
 :root {
+  /* ① 短名（既有，保持原值不动） */
   --background: #ffffff;
   --surface: #f6f8fc;
   --elevated: #ffffff;
@@ -15,6 +25,31 @@
   --accent: #1d4ed8;
   --accent-hover: #1e3fae;
   --ring: #93b4ff;
+
+  /* ① 新增短名 */
+  --muted-deep: #7c879b; /* 第三级文字：占位说明、时间戳 */
+  --on-accent: #ffffff; /* 铺在 accent 实底上的文字（对比度：白 on #1d4ed8 ≈ 7.4:1） */
+  --accent-alt: #0e7490; /* 次强调色：青，用于次级强调，不与主强调争抢 */
+  --border-focus: #1d4ed8; /* 键盘焦点边框 */
+  --success: #15803d; /* on --surface ≈ 4.7:1 */
+  --warning: #b45309;
+  --error: #b91c1c;
+
+  /* ② 规范名（任务书 4.1 清单，全部指向短名） */
+  --color-bg-primary: var(--background);
+  --color-bg-secondary: var(--surface);
+  --color-bg-surface: var(--elevated);
+  --color-text-primary: var(--foreground);
+  --color-text-secondary: var(--muted);
+  --color-text-muted: var(--muted-deep);
+  --color-accent: var(--accent);
+  --color-accent-secondary: var(--accent-alt);
+  --color-accent-contrast: var(--on-accent);
+  --color-border: var(--border);
+  --color-border-focus: var(--border-focus);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
 
   /* ---- 宇宙层恒定配色（不受 Light / Dark 主题影响）---- */
   --cosmic-void: #03040a;
@@ -27,26 +62,45 @@
   --cosmic-muted: #a7b2cc;
   --cosmic-line: rgba(232, 236, 246, 0.14);
 
-  /* ---- 统一动效令牌：新增动画一律引用这些变量 ---- */
+  /* ---- 时长令牌 ----
+     只有「不随主题变化、又需要被 JS 之外的 CSS 复用」的量才放这里。
+     转场遮罩的时长由 TransitionProvider 的 JS 计时器驱动（CSS 动画时长由
+     内联 style 注入），因此那组数值的唯一来源仍在 TS 里，不在此处重复。 */
   --dur-instant: 120ms; /* reduced-motion 下的极短淡入淡出 */
   --dur-fast: 180ms; /* hover / focus 反馈 */
   --dur-base: 320ms; /* 常规淡入、缩放 */
-  --dur-slow: 460ms; /* 转场覆盖 */
-  --dur-reveal: 420ms; /* 转场揭开 / 页面入场 */
-  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-slow: 380ms; /* 转场覆盖（与 TransitionProvider 的 warp.cover 对齐） */
+  --dur-reveal: 300ms; /* 转场揭开 / 页面入场（与 warp.reveal 对齐） */
 }
 
+/* 暗色 = 深空。这里刻意向宇宙层调色板靠拢（而不是通用的灰蓝），
+   让「行星内部」的页面和首页/星图看起来是同一个世界。 */
 .dark {
-  --background: #0a0f1e;
-  --surface: #101832;
-  --elevated: #141d38;
-  --foreground: #e7ecfb;
-  --muted: #97a3bd;
-  --border: #24304e;
-  --accent: #82a8ff;
-  --accent-hover: #a9c3ff;
+  --background: #060a18; /* = --cosmic-deep */
+  --surface: #0b1226;
+  --elevated: #101a33;
+  --foreground: #eef2fb; /* = --cosmic-text */
+  --muted: #a7b2cc; /* = --cosmic-muted */
+  --border: #1d2947;
+  --accent: #8fe3ff; /* = --cosmic-ice，全站主强调统一到冰青 */
+  --accent-hover: #b5ecff;
   --ring: #3a4a75;
+
+  --muted-deep: #7f8aa6;
+  --on-accent: #060a18; /* 深色下 accent 是亮色，实底文字必须反转，否则只有 2.33:1 */
+  --accent-alt: #c9b6ff; /* = --cosmic-violet */
+  --border-focus: #8fe3ff;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --error: #f87171;
+}
+
+/* 缓动曲线：不随主题变化，用非 inline 的 @theme 声明，
+   这样既生成 CSS 变量供 var() 使用，也生成 Tailwind 的 ease-out-soft 工具类。
+   （inline 只把值内联进工具类，不会产出可被 var() 引用的变量。） */
+@theme {
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 @theme inline {
@@ -59,6 +113,13 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-ring: var(--ring);
+
+  /* 新增令牌的工具类入口。键名与短名不同名，避免自引用。
+     注意这里用 var(--短名) 而不是内联字面量——内联会绕过暗色覆盖。 */
+  --color-on-accent: var(--on-accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
 
   /* 宇宙层颜色（在 cosmic 作用域内恒定，不跟随主题） */
   --color-cosmic-void: var(--cosmic-void);
@@ -79,6 +140,20 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    /* 触屏：去掉 iOS / Android 点击瞬间的灰色高亮块。
+       本站所有可交互元素都有自绘的 hover / focus-visible / active 反馈，
+       系统高亮块在深空底色上既突兀、又会盖住星球本身。 */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 可交互元素：manipulation 关掉「双击缩放」带来的点击延迟，
+     同时保留单指滚动与双指缩放 —— 不会削弱页面缩放这项无障碍能力。 */
+  a,
+  button,
+  [role="button"],
+  summary,
+  label {
+    touch-action: manipulation;
   }
 
   body {
@@ -86,9 +161,10 @@
     color: var(--foreground);
   }
 
-  /* 键盘导航时给出清晰的 focus 状态 */
+  /* 键盘导航时给出清晰的 focus 状态。
+     颜色走 --border-focus，与主强调色解耦：将来想单独调焦点色不必动 accent。 */
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--border-focus);
     outline-offset: 2px;
     border-radius: 2px;
   }
@@ -139,7 +215,8 @@
   scroll-margin-top: 5.5rem;
 }
 
-.prose :where(h2, h3) .heading-anchor {
+.prose :where(h1, h2, h3, h4, h5, h6) .heading-anchor {
+  position: relative;
   margin-left: 0.4rem;
   color: var(--muted);
   font-weight: 400;
@@ -148,7 +225,22 @@
   transition: opacity 0.15s ease-in-out;
 }
 
-.prose :where(h2, h3):hover .heading-anchor,
+/* 触控命中区域：锚点本体只有 "#" 的尺寸（约 11×31px），远小于 44×44 的
+   最小推荐值。这里用 ::before 铺一块透明命中区 —— 伪元素同样参与命中测试，
+   又不影响布局与视觉。只向右、向上下扩展：锚点位于标题文字之后，
+   向右是空位，向左扩会盖住正文最后几个字。 */
+.prose .heading-anchor::before {
+  content: "";
+  position: absolute;
+  inset: -0.5rem -2.25rem -0.5rem 0;
+}
+
+/* 可见的 "#" 用伪元素画，不进入标题的文本内容（复制 / 读屏都不受影响） */
+.prose .heading-anchor::after {
+  content: "#";
+}
+
+.prose :where(h1, h2, h3, h4, h5, h6):hover .heading-anchor,
 .prose .heading-anchor:focus-visible {
   opacity: 1;
 }

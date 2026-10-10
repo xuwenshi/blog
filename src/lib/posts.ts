@@ -50,6 +50,44 @@ function toStringArray(value: unknown): string[] {
 }
 
 /**
+ * 读取本地 SVG 封面的原始尺寸，用来给 <img> 补上 width / height 属性。
+ *
+ * 为什么要多这一步：`<img>` 只有 CSS 宽度、没有宽高属性时，浏览器在图片
+ * 下载完成前不知道它的高宽比，会先按 0 高度排版、等图片到达后再撑开，
+ * 造成明显的 CLS（布局偏移）。有了宽高属性，浏览器可以立刻按比例预留空间。
+ *
+ * 只处理 SVG：它本身就是文本，解析 `<svg>` 开标签即可拿到 width/height 或
+ * viewBox；位图需要读二进制头（PNG/JPEG 各不相同），收益有限，暂不处理 ——
+ * 解析不到就返回 null，`<img>` 退回原来的行为，不会出错。
+ */
+function readCoverDimensions(
+  cover: string | undefined,
+): { width: number; height: number } | null {
+  if (!cover || !cover.startsWith("/") || !cover.endsWith(".svg")) return null;
+
+  const filePath = path.join(process.cwd(), "public", cover);
+  if (!fs.existsSync(filePath)) return null;
+
+  // 只读开头一段：<svg> 开标签一定在最前面，没必要读整个文件
+  const head = fs.readFileSync(filePath, "utf8").slice(0, 2000);
+  const svgTag = /<svg\b[^>]*>/i.exec(head)?.[0];
+  if (!svgTag) return null;
+
+  const width = /width="([\d.]+)"/.exec(svgTag)?.[1];
+  const height = /height="([\d.]+)"/.exec(svgTag)?.[1];
+  if (width && height) {
+    return { width: Number(width), height: Number(height) };
+  }
+
+  const viewBox = /viewBox="([^"]+)"/.exec(svgTag)?.[1]?.trim().split(/\s+/);
+  if (viewBox && viewBox.length === 4) {
+    return { width: Number(viewBox[2]), height: Number(viewBox[3]) };
+  }
+
+  return null;
+}
+
+/**
  * 估算阅读时间（分钟）。
  * 中文按 350 字/分钟、英文按 200 词/分钟计算，并对代码块做一定折扣。
  */
@@ -76,6 +114,12 @@ function parsePostFile(file: string): ParsedPost {
   const { data, content } = matter(raw);
   const frontmatter = data as Frontmatter;
 
+  const cover =
+    typeof frontmatter.cover === "string" && frontmatter.cover.trim() !== ""
+      ? frontmatter.cover.trim()
+      : undefined;
+  const coverDimensions = readCoverDimensions(cover);
+
   const meta: PostMeta = {
     slug,
     title: requireString(frontmatter.title, "title", file),
@@ -86,10 +130,10 @@ function parsePostFile(file: string): ParsedPost {
       typeof frontmatter.category === "string" && frontmatter.category.trim() !== ""
         ? frontmatter.category.trim()
         : "未分类",
-    cover:
-      typeof frontmatter.cover === "string" && frontmatter.cover.trim() !== ""
-        ? frontmatter.cover.trim()
-        : undefined,
+    cover,
+    ...(coverDimensions
+      ? { coverWidth: coverDimensions.width, coverHeight: coverDimensions.height }
+      : {}),
     draft: frontmatter.draft === true,
     readingTime: estimateReadingTime(content),
   };

@@ -63,7 +63,7 @@ export default async function GoalsPage() {
               <section key={id}>
                 <h2 className="flex items-baseline gap-2 text-lg font-semibold tracking-tight text-foreground">
                   {label}
-                  <span className="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-muted">
+                  <span className="text-xs font-medium uppercase tracking-[0.22em] text-muted">
                     {latin}
                   </span>
                 </h2>

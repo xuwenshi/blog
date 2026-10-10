@@ -27,12 +27,14 @@ export default async function Footer() {
         </div>
 
         <nav aria-label="页脚导航" className="flex flex-col gap-3 md:items-end">
-          <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+          {/* min-h-11(44px) + inline-flex：文字链接的视觉尺寸不变，
+              但触控命中区域达到 44×44 的最小推荐值（WCAG 2.5.5） */}
+          <ul className="flex flex-wrap items-center gap-x-4 text-sm">
             {siteConfig.navLinks.map((link) => (
               <li key={link.href}>
                 <CosmicLink
                   href={link.href}
-                  className="text-muted transition-colors hover:text-foreground"
+                  className="inline-flex min-h-11 items-center text-muted transition-colors hover:text-foreground"
                 >
                   {link.label}
                 </CosmicLink>
@@ -40,13 +42,13 @@ export default async function Footer() {
             ))}
           </ul>
 
-          <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+          <ul className="flex flex-wrap items-center gap-x-4 text-sm">
             <li>
               <a
                 href={siteConfig.github}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-foreground"
+                className="inline-flex min-h-11 items-center gap-1.5 text-muted transition-colors hover:text-foreground"
               >
                 <GithubIcon width={15} height={15} />
                 GitHub
@@ -55,7 +57,7 @@ export default async function Footer() {
             <li>
               <a
                 href={`mailto:${siteConfig.email}`}
-                className="inline-flex items-center gap-1.5 text-muted transition-colors hover:text-foreground"
+                className="inline-flex min-h-11 items-center gap-1.5 text-muted transition-colors hover:text-foreground"
               >
                 <MailIcon width={15} height={15} />
                 Email

@@ -23,12 +23,12 @@ export default function PostToc({
         </h2>
       ) : null}
 
-      <ul className="space-y-1.5 border-l border-border text-sm">
+      <ul className="space-y-0.5 border-l border-border text-sm">
         {items.map((item) => (
           <li key={item.id} className={item.level === 3 ? "pl-3" : undefined}>
             <a
               href={`#${item.id}`}
-              className="-ml-px block border-l border-transparent pl-3 leading-snug text-muted transition-colors hover:border-accent hover:text-foreground"
+              className="-ml-px flex min-h-11 items-center border-l border-transparent pl-3 leading-snug text-muted transition-colors hover:border-accent hover:text-foreground"
             >
               {item.text}
             </a>

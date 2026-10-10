@@ -7,7 +7,7 @@ import type { CosmicSection } from "@/lib/cosmic";
 /**
  * 分区页统一的页头（服务端组件）。
  *
- * 在原有 PageHeader 的基础上叠加宇宙设计语言：
+ * 五大分区行星与「关于」页共用它，叠加统一的宇宙设计语言：
  * ①「← 返回星图」让用户随时回到五大行星；
  * ② 分区识别色的 eyebrow（文字仍走主题色 text-accent 以保证对比度，
  *   只在旁边放一个极小的识别色圆点，颜色不承担阅读职责）；
@@ -19,7 +19,7 @@ export default function SectionIntro({
   description,
   children,
 }: {
-  section: CosmicSection;
+  section: Pick<CosmicSection, "latin" | "accent">;
   title: string;
   description?: string;
   children?: ReactNode;

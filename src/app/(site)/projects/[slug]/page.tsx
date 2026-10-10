@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import PostToc from "@/components/blog/PostToc";
+import CosmicLink from "@/components/cosmic/CosmicLink";
 import { Chip, StatusBadge } from "@/components/ui/Badge";
 import {
   ArrowLeftIcon,
@@ -57,13 +57,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-      <Link
+      <CosmicLink
         href="/projects"
         className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-foreground"
       >
         <ArrowLeftIcon width={15} height={15} />
         返回项目列表
-      </Link>
+      </CosmicLink>
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_220px]">
         <div className="min-w-0">
@@ -119,13 +119,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 ) : null}
 
                 {linkedPost ? (
-                  <Link
+                  <CosmicLink
                     href={`/blog/${linkedPost.slug}`}
                     className="inline-flex items-center gap-2 rounded-lg border border-border bg-elevated px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-accent/50"
                   >
                     <FileTextIcon width={15} height={15} />
                     相关文章
-                  </Link>
+                  </CosmicLink>
                 ) : null}
               </div>
             </header>
@@ -141,7 +141,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <h2 className="mb-3 text-lg font-semibold tracking-tight text-foreground">
                 相关文章
               </h2>
-              <Link
+              <CosmicLink
                 href={`/blog/${linkedPost.slug}`}
                 className="group flex items-center justify-between gap-4 rounded-xl border border-border bg-elevated p-4 transition-colors hover:border-accent/50"
               >
@@ -158,7 +158,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   height={16}
                   className="shrink-0 text-accent transition-transform group-hover:translate-x-0.5"
                 />
-              </Link>
+              </CosmicLink>
             </section>
           ) : null}
         </div>

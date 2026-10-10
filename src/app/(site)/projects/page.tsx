@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
+import SectionIntro from "@/components/cosmic/SectionIntro";
 import ProjectCard from "@/components/project/ProjectCard";
-import PageHeader from "@/components/ui/PageHeader";
+import { getSection } from "@/lib/cosmic";
 import { getAllProjects } from "@/lib/projects";
 
 export const metadata: Metadata = {
@@ -15,15 +16,15 @@ export default function ProjectsPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-      <PageHeader
-        eyebrow="Projects"
+      <SectionIntro
+        section={getSection("projects")}
         title="项目"
         description="这里记录我做过的完整项目。每个项目都会说明背景、目标、技术选型的理由、核心实现、遇到的问题以及最终结果。"
       >
         <p className="text-sm text-muted">
           共 <span className="font-medium text-foreground">{projects.length}</span> 个项目
         </p>
-      </PageHeader>
+      </SectionIntro>
 
       <div className="mt-8">
         {projects.length === 0 ? (

@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import CosmicLink from "@/components/cosmic/CosmicLink";
 import { CloseIcon, MenuIcon } from "@/components/ui/Icons";
 import type { NavLink } from "@/lib/site";
 
@@ -11,10 +11,38 @@ import type { NavLink } from "@/lib/site";
  * 导航链接（客户端组件）。
  * 只有「当前路由高亮」和「移动端菜单开合」需要浏览器交互，
  * 因此把这部分单独抽成客户端组件，导航栏本身仍然是服务端组件。
+ *
+ * 站内链接统一走 CosmicLink（soft 变体），点击时播一次同体系短转场；
+ * 外链、GitHub 等仍用原生 <a>，不参与转场。
  */
 export default function Navigation({ links }: { links: NavLink[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  /* 路由变化（含浏览器前进/后退）后收起菜单。
+     这是 React 官方推荐的「props 变化时调整 state」写法：在渲染期比较并重置，
+     而不是放进 useEffect（effect 里同步 setState 会引发额外的级联渲染）。 */
+  const [lastPathname, setLastPathname] = useState(pathname);
+  if (lastPathname !== pathname) {
+    setLastPathname(pathname);
+    setOpen(false);
+  }
+
+  /* 菜单展开时按 Esc 关闭，并把焦点还给开合按钮（键盘用户的常规预期） */
+  useEffect(() => {
+    if (!open) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      document
+        .querySelector<HTMLButtonElement>('[aria-controls="mobile-nav"]')
+        ?.focus();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -52,9 +80,9 @@ export default function Navigation({ links }: { links: NavLink[] }) {
                   {link.label}
                 </a>
               ) : (
-                <Link href={link.href} className={desktopLinkClass(link.href)}>
+                <CosmicLink href={link.href} className={desktopLinkClass(link.href)}>
                   {link.label}
-                </Link>
+                </CosmicLink>
               )}
             </li>
           ))}
@@ -93,14 +121,14 @@ export default function Navigation({ links }: { links: NavLink[] }) {
                     {link.label}
                   </a>
                 ) : (
-                  <Link
+                  <CosmicLink
                     href={link.href}
                     className={mobileLinkClass(link.href)}
                     // 点击后立即收起菜单，比监听路由变化再同步状态更直接
                     onClick={() => setOpen(false)}
                   >
                     {link.label}
-                  </Link>
+                  </CosmicLink>
                 )}
               </li>
             ))}

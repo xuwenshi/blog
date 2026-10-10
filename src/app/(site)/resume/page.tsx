@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import PageHeader from "@/components/ui/PageHeader";
+import SectionIntro from "@/components/cosmic/SectionIntro";
 import {
   CheckCircleIcon,
   DownloadIcon,
@@ -8,6 +8,7 @@ import {
   MailIcon,
   MapPinIcon,
 } from "@/components/ui/Icons";
+import { getSection } from "@/lib/cosmic";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -19,8 +20,8 @@ export const metadata: Metadata = {
 export default function ResumePage() {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
-      <PageHeader
-        eyebrow="Resume"
+      <SectionIntro
+        section={getSection("resume")}
         title="简历"
         description={`${siteConfig.author} · ${siteConfig.role}`}
       >
@@ -41,7 +42,7 @@ export default function ResumePage() {
             </span>
           )}
         </div>
-      </PageHeader>
+      </SectionIntro>
 
       {/* 联系方式 */}
       <section className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted">

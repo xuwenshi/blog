@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import CosmicLink from "@/components/cosmic/CosmicLink";
 import { GithubIcon, MailIcon } from "@/components/ui/Icons";
 import { siteConfig } from "@/lib/site";
 
@@ -17,7 +16,8 @@ export default async function Footer() {
 
   return (
     <footer className="mt-16 border-t border-border bg-surface">
-      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between">
+      {/* 页面最底部要避开 iOS 的 Home 指示条（viewportFit: cover 之后 inset 才非 0） */}
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 pt-10 pb-[max(2.5rem,env(safe-area-inset-bottom))] sm:px-6 md:flex-row md:items-center md:justify-between">
         <div className="space-y-2">
           <p className="text-sm font-medium text-foreground">{siteConfig.name}</p>
           <p className="max-w-md text-sm text-muted">{siteConfig.tagline}</p>
@@ -30,9 +30,12 @@ export default async function Footer() {
           <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             {siteConfig.navLinks.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-muted transition-colors hover:text-foreground">
+                <CosmicLink
+                  href={link.href}
+                  className="text-muted transition-colors hover:text-foreground"
+                >
                   {link.label}
-                </Link>
+                </CosmicLink>
               </li>
             ))}
           </ul>

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
+import CosmicLink from "@/components/cosmic/CosmicLink";
 import PageHeader from "@/components/ui/PageHeader";
 import {
+  ArrowLeftIcon,
   ArrowRightIcon,
   CheckCircleIcon,
   GithubIcon,
@@ -27,11 +28,22 @@ export default function AboutPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-      <PageHeader
-        eyebrow="About"
-        title={`关于 ${siteConfig.author}`}
-        description={siteConfig.role}
-      />
+      <CosmicLink
+        href="/universe"
+        variant="warp"
+        className="cosmic-enter inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-foreground"
+      >
+        <ArrowLeftIcon width={15} height={15} />
+        返回星图
+      </CosmicLink>
+
+      <div className="mt-6">
+        <PageHeader
+          eyebrow="About"
+          title={`关于 ${siteConfig.author}`}
+          description={siteConfig.role}
+        />
+      </div>
 
       {/* 概览数字 */}
       <dl className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -199,19 +211,19 @@ export default function AboutPage() {
       {/* 下一步 */}
       <section className="mt-14 border-t border-border pt-10">
         <div className="flex flex-wrap items-center gap-3">
-          <Link
+          <CosmicLink
             href="/resume"
             className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hover"
           >
             查看简历
             <ArrowRightIcon width={15} height={15} />
-          </Link>
-          <Link
+          </CosmicLink>
+          <CosmicLink
             href="/blog"
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-elevated px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-accent/50"
           >
             阅读文章
-          </Link>
+          </CosmicLink>
         </div>
       </section>
     </div>

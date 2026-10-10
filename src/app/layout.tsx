@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import Footer from "@/components/layout/Footer";
-import Navbar from "@/components/layout/Navbar";
+import CosmicTransitionProvider from "@/components/cosmic/TransitionProvider";
+import CosmicTransitionOverlay from "@/components/cosmic/TransitionOverlay";
 import { siteConfig } from "@/lib/site";
 
 import "./globals.css";
@@ -67,6 +67,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  // width=device-width 之外还要显式声明 viewportFit: cover，
+  // 否则 iOS 上的 env(safe-area-inset-*) 恒为 0，刘海 / 底部指示条会压住内容。
+  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#0a0f1e" },
@@ -76,6 +79,9 @@ export const viewport: Viewport = {
 /**
  * 在 hydration 之前就把主题写到 <html> 上，避免暗色模式用户看到白色闪屏。
  * 这段脚本只读取 localStorage，不涉及任何用户输入。
+ *
+ * 注意：宇宙层（/ 与 /universe）恒定深空，不受这个主题影响 ——
+ * 它们的深空底色由 (cosmic)/layout.tsx 的 .cosmic-scope 类（SSR 即存在）保证。
  */
 const themeInitScript = `(function(){try{var t=localStorage.getItem("theme")||"system";var d=t==="dark"||(t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var r=document.documentElement;r.classList.toggle("dark",d);r.style.colorScheme=d?"dark":"light";}catch(e){}})();`;
 
@@ -105,6 +111,13 @@ const structuredData = {
   ],
 };
 
+/**
+ * 根外壳（极简）。
+ *
+ * 这里刻意不再渲染 Navbar / Footer —— 它们属于「行星内部」的站点外壳，
+ * 已经下沉到 (site)/layout.tsx；宇宙层则由 (cosmic)/layout.tsx 提供深空外壳。
+ * 根布局只负责：html/body、主题脚本、跳转链接、结构化数据。
+ */
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -118,18 +131,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-accent focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-accent focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-background"
         >
           跳到主要内容
         </a>
 
-        <Navbar />
-
-        <main id="main" className="flex-1">
+        <CosmicTransitionProvider>
           {children}
-        </main>
-
-        <Footer />
+          <CosmicTransitionOverlay />
+        </CosmicTransitionProvider>
 
         <script
           type="application/ld+json"

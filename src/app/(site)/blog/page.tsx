@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 import PostList from "@/components/blog/PostList";
-import PageHeader from "@/components/ui/PageHeader";
+import SectionIntro from "@/components/cosmic/SectionIntro";
+import { getSection } from "@/lib/cosmic";
 import { getAllCategories, getAllPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
@@ -16,8 +17,8 @@ export default function BlogPage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-      <PageHeader
-        eyebrow="Blog"
+      <SectionIntro
+        section={getSection("blog")}
         title="博客"
         description="记录机器学习、数据挖掘、RAG 与工程实践中的问题、原理、实验和踩坑。所有文章都尽量给出可复现的代码与数据。"
       >
@@ -25,7 +26,7 @@ export default function BlogPage() {
           共 <span className="font-medium text-foreground">{posts.length}</span> 篇文章，
           <span className="font-medium text-foreground">{categories.length}</span> 个分类
         </p>
-      </PageHeader>
+      </SectionIntro>
 
       <div className="mt-8">
         <PostList posts={posts} />

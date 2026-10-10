@@ -95,11 +95,12 @@ export const siteConfig: SiteConfig = {
   ],
 
   navLinks: [
-    { href: "/", label: "首页" },
-    { href: "/blog", label: "博客" },
+    { href: "/universe", label: "星图" },
+    { href: "/blog", label: "文章" },
     { href: "/projects", label: "项目" },
+    { href: "/diary", label: "日记" },
+    { href: "/goals", label: "目标" },
     { href: "/about", label: "关于" },
-    { href: "/resume", label: "简历" },
   ],
 
   socials: [

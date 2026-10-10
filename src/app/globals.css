@@ -15,6 +15,26 @@
   --accent: #1d4ed8;
   --accent-hover: #1e3fae;
   --ring: #93b4ff;
+
+  /* ---- 宇宙层恒定配色（不受 Light / Dark 主题影响）---- */
+  --cosmic-void: #03040a;
+  --cosmic-deep: #060a18;
+  --cosmic-ice: #8fe3ff;
+  --cosmic-violet: #c9b6ff;
+  --cosmic-silver: #e8ecf6;
+  --cosmic-warm: #ffe9c7;
+  --cosmic-text: #eef2fb;
+  --cosmic-muted: #a7b2cc;
+  --cosmic-line: rgba(232, 236, 246, 0.14);
+
+  /* ---- 统一动效令牌：新增动画一律引用这些变量 ---- */
+  --dur-instant: 120ms; /* reduced-motion 下的极短淡入淡出 */
+  --dur-fast: 180ms; /* hover / focus 反馈 */
+  --dur-base: 320ms; /* 常规淡入、缩放 */
+  --dur-slow: 460ms; /* 转场覆盖 */
+  --dur-reveal: 420ms; /* 转场揭开 / 页面入场 */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .dark {
@@ -39,6 +59,17 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-ring: var(--ring);
+
+  /* 宇宙层颜色（在 cosmic 作用域内恒定，不跟随主题） */
+  --color-cosmic-void: var(--cosmic-void);
+  --color-cosmic-deep: var(--cosmic-deep);
+  --color-cosmic-ice: var(--cosmic-ice);
+  --color-cosmic-violet: var(--cosmic-violet);
+  --color-cosmic-silver: var(--cosmic-silver);
+  --color-cosmic-warm: var(--cosmic-warm);
+  --color-cosmic-text: var(--cosmic-text);
+  --color-cosmic-muted: var(--cosmic-muted);
+  --color-cosmic-line: var(--cosmic-line);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -210,4 +241,295 @@
 .prose blockquote p::before,
 .prose blockquote p::after {
   content: none;
+}
+
+/* ===========================================================================
+   宇宙层设计系统（Cosmic Portfolio）
+   ---------------------------------------------------------------------------
+   场域划分：
+   - 宇宙层（/ 星海入口、/universe 星图）恒定深空，不跟随 Light / Dark 主题；
+   - 行星内部（blog / projects / resume / diary / goals / about）继续使用上面的
+     主题系统，只叠加宇宙设计语言（分区识别色、返回星图、入场动效）。
+   所有动画只用 transform / opacity，避免触发布局重排。
+=========================================================================== */
+
+/* 宇宙作用域：覆盖主题变量，恒定深空 */
+.cosmic-scope {
+  --background: var(--cosmic-void);
+  --surface: rgba(232, 236, 246, 0.05);
+  --elevated: rgba(232, 236, 246, 0.08);
+  --foreground: var(--cosmic-text);
+  --muted: var(--cosmic-muted);
+  --border: var(--cosmic-line);
+  --accent: var(--cosmic-ice);
+  --accent-hover: #b8eeff;
+  --ring: rgba(143, 227, 255, 0.5);
+
+  position: relative;
+  isolation: isolate;
+  color-scheme: dark;
+  background-color: var(--cosmic-void);
+  color: var(--foreground);
+}
+
+/* body 底色与移动端滚动回弹：
+   .cosmic-scope 在 SSR 输出的 HTML 里就存在（不是 hydration 之后才加），
+   因此不会出现「先白后黑」的闪屏。:has() 不被支持时由 .cosmic-scope 自身兜底。 */
+html:has(.cosmic-scope) {
+  color-scheme: dark;
+}
+
+html:has(.cosmic-scope) body {
+  background-color: var(--cosmic-void);
+}
+
+/* 极淡的星云 / 深空底衬：永远在内容之下，不盖过星点与文字。
+   用 fixed 是因为 /universe 会纵向滚动，absolute 会把渐变拉伸得过淡。 */
+.cosmic-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 112%, rgba(22, 34, 68, 0.6) 0%, transparent 62%),
+    radial-gradient(80% 60% at 78% 10%, rgba(86, 62, 148, 0.2) 0%, transparent 66%),
+    radial-gradient(72% 56% at 10% 24%, rgba(28, 92, 132, 0.18) 0%, transparent 66%);
+}
+
+/* 宇宙层内的焦点态：深空背景下用冰青色更醒目 */
+.cosmic-scope :focus-visible {
+  outline: 2px solid var(--cosmic-ice);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------- 纯 CSS 星球
+   .cosmic-planet 负责球体本体与受光/暗面/边缘光，外层 .cosmic-float 负责漂浮，
+   两者分开是为了让「漂浮动画的 transform」与「hover 缩放的 transform」不互相覆盖。 */
+.cosmic-planet {
+  position: relative;
+  display: block;
+  flex: none;
+  border-radius: 9999px;
+  transition:
+    transform var(--dur-base) var(--ease-out-soft),
+    filter var(--dur-base) var(--ease-out-soft);
+}
+
+.cosmic-planet__body,
+.cosmic-planet__surface,
+.cosmic-planet__shade,
+.cosmic-planet__rim {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* 表面纹理：重复斜纹在圆内横向平移，形成「球体自转」的错觉（纯 GPU 合成） */
+.cosmic-planet__surface {
+  overflow: hidden;
+  opacity: 0.42;
+  background-image:
+    repeating-linear-gradient(112deg, rgba(255, 255, 255, 0.18) 0 5px, transparent 5px 21px),
+    repeating-linear-gradient(68deg, rgba(2, 4, 10, 0.22) 0 9px, transparent 9px 28px);
+  background-size: 220% 100%;
+  animation: cosmic-spin-surface var(--planet-spin, 30s) linear infinite;
+}
+
+/* 受光面高光 + 暗面内阴影 + 边缘光晕 */
+.cosmic-planet__shade {
+  background: radial-gradient(
+    circle at 30% 26%,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 36%
+  );
+  box-shadow:
+    inset -12px -16px 34px rgba(0, 0, 0, 0.72),
+    inset 8px 10px 24px rgba(255, 255, 255, 0.05);
+}
+
+.cosmic-planet__rim {
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 var(--planet-glow, 34px) -6px var(--planet-accent, var(--cosmic-ice));
+}
+
+/* 光环：压扁的椭圆，随星球一起定位 */
+.cosmic-planet__ring {
+  position: absolute;
+  left: -20%;
+  top: 40%;
+  width: 140%;
+  height: 36%;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 236, 246, 0.26);
+  transform: rotate(-16deg);
+  pointer-events: none;
+}
+
+/* 悬停 / 键盘聚焦（星图里用 .group 包裹）时增强星球：只动 transform 与 filter */
+.group:hover .cosmic-planet,
+.group:focus-visible .cosmic-planet {
+  transform: scale(1.06);
+  filter: brightness(1.14) saturate(1.08);
+}
+
+.group:hover .cosmic-planet__ring,
+.group:focus-visible .cosmic-planet__ring {
+  border-color: var(--planet-accent, var(--cosmic-ice));
+}
+
+/* -------------------------------------------------------------- 通用动效工具 */
+/* 轻微漂浮：速度慢、幅度小，避免持续抖动 */
+.cosmic-float {
+  animation: cosmic-float 9s var(--ease-in-out-soft) infinite;
+}
+
+.cosmic-float--slow {
+  animation-duration: 13s;
+}
+
+/* 页面 / 区块入场：终态即可见态（both），不会造成「内容长期不可读」 */
+.cosmic-enter {
+  animation: cosmic-rise var(--dur-reveal) var(--ease-out-soft) both;
+}
+
+/* 柔和呼吸（用于入口提示与核心辉光） */
+.cosmic-pulse {
+  animation: cosmic-pulse 4.5s var(--ease-in-out-soft) infinite;
+}
+
+/* 星空 / 星图容器：画布永远不拦截交互 */
+.cosmic-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  touch-action: pan-y;
+}
+
+/* 转场遮罩：覆盖整个视口，但永远不拦截交互（pointer-events: none）。
+   即使状态机因为任何意外卡住，用户依然能正常点击与滚动。 */
+.cosmic-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity, transform;
+  background: radial-gradient(
+    circle at var(--origin-x, 50%) var(--origin-y, 50%),
+    rgba(143, 227, 255, 0.32) 0%,
+    rgba(22, 36, 72, 0.94) 34%,
+    var(--cosmic-void) 66%
+  );
+}
+
+/* 穿越变体的缩放原点跟随被点击元素，让「镜头推进」有方向感 */
+.cosmic-transition-overlay[data-variant="warp"] {
+  transform-origin: var(--origin-x, 50%) var(--origin-y, 50%);
+}
+
+/* --------------------------------------------------------------- 关键帧定义 */
+@keyframes cosmic-spin-surface {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@keyframes cosmic-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+@keyframes cosmic-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cosmic-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 转场遮罩：warp（星球穿越，带缩放）与 soft（同体系短版淡入淡出）共用同一套帧 */
+@keyframes cosmic-warp-cover {
+  from {
+    opacity: 0;
+    transform: scale(0.62);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cosmic-warp-reveal {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}
+
+@keyframes cosmic-fade-cover {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cosmic-fade-reveal {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------- reduced-motion 全局兜底 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* 豁免：转场遮罩保留极短的淡入淡出（更高特异性覆盖上面的 * 规则），
+     避免 reduced-motion 用户看到「啪」的一下硬闪。 */
+  .cosmic-transition-overlay,
+  .cosmic-transition-overlay * {
+    animation-duration: var(--dur-instant) !important;
+    transition-duration: var(--dur-instant) !important;
+  }
 }

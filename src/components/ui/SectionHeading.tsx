@@ -1,5 +1,6 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
+
+import CosmicLink from "@/components/cosmic/CosmicLink";
 
 /**
  * 首页 / 列表页通用的区块标题。
@@ -36,12 +37,12 @@ export default function SectionHeading({
             {action.label}
           </a>
         ) : (
-          <Link
+          <CosmicLink
             href={action.href}
             className="text-sm font-medium text-accent transition-colors hover:text-accent-hover"
           >
             {action.label}
-          </Link>
+          </CosmicLink>
         )
       ) : null}
     </div>

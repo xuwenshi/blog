@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import CosmicLink from "@/components/cosmic/CosmicLink";
 import { Chip, StatusBadge } from "@/components/ui/Badge";
 import { ArrowRightIcon, ExternalLinkIcon, GithubIcon } from "@/components/ui/Icons";
 import { hueFromSlug } from "@/lib/format";
@@ -41,9 +40,12 @@ export default function ProjectCard({ project }: { project: ProjectMeta }) {
         </div>
 
         <h3 className="mt-3 text-base font-semibold tracking-tight text-foreground sm:text-lg">
-          <Link href={`/projects/${project.slug}`} className="after:absolute after:inset-0">
+          <CosmicLink
+            href={`/projects/${project.slug}`}
+            className="after:absolute after:inset-0"
+          >
             {project.name}
-          </Link>
+          </CosmicLink>
         </h3>
 
         <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
@@ -61,7 +63,7 @@ export default function ProjectCard({ project }: { project: ProjectMeta }) {
 
       {/* 卡片外的独立链接：用 relative 容器避免被整卡链接覆盖 */}
       <div className="relative z-10 flex flex-wrap items-center gap-4 border-t border-border px-5 py-3 text-sm">
-        <Link
+        <CosmicLink
           href={`/projects/${project.slug}`}
           className="inline-flex items-center gap-1 font-medium text-accent transition-colors hover:text-accent-hover"
         >
@@ -71,7 +73,7 @@ export default function ProjectCard({ project }: { project: ProjectMeta }) {
             height={15}
             className="transition-transform group-hover:translate-x-0.5"
           />
-        </Link>
+        </CosmicLink>
 
         {project.github ? (
           <a

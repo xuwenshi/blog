@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import PostCard from "@/components/blog/PostCard";
 import PostToc from "@/components/blog/PostToc";
+import CosmicLink from "@/components/cosmic/CosmicLink";
 import { Chip } from "@/components/ui/Badge";
 import {
   ArrowLeftIcon,
@@ -84,13 +84,13 @@ export default async function PostPage({ params }: PostPageProps) {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-      <Link
+      <CosmicLink
         href="/blog"
         className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-foreground"
       >
         <ArrowLeftIcon width={15} height={15} />
         返回博客列表
-      </Link>
+      </CosmicLink>
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,1fr)_220px]">
         <div className="min-w-0">
@@ -154,7 +154,7 @@ export default async function PostPage({ params }: PostPageProps) {
             className="mt-12 grid gap-3 border-t border-border pt-8 sm:grid-cols-2"
           >
             {prev ? (
-              <Link
+              <CosmicLink
                 href={`/blog/${prev.slug}`}
                 className="group rounded-xl border border-border bg-elevated p-4 transition-colors hover:border-accent/50"
               >
@@ -165,13 +165,13 @@ export default async function PostPage({ params }: PostPageProps) {
                 <span className="mt-1.5 block text-sm font-medium text-foreground">
                   {prev.title}
                 </span>
-              </Link>
+              </CosmicLink>
             ) : (
               <span aria-hidden />
             )}
 
             {next ? (
-              <Link
+              <CosmicLink
                 href={`/blog/${next.slug}`}
                 className="group rounded-xl border border-border bg-elevated p-4 transition-colors hover:border-accent/50 sm:text-right"
               >
@@ -182,7 +182,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 <span className="mt-1.5 block text-sm font-medium text-foreground">
                   {next.title}
                 </span>
-              </Link>
+              </CosmicLink>
             ) : null}
           </nav>
 

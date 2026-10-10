@@ -70,3 +70,55 @@ export type TagCount = {
   tag: string;
   count: number;
 };
+
+/** 日记元信息（content/diary/*.md） */
+export type DiaryMeta = {
+  slug: string;
+  title: string;
+  /** 一句话摘要，显示在时间轴与列表里 */
+  summary: string;
+  /** ISO 日期字符串，如 2026-10-10 */
+  date: string;
+  /** 可选的心情标签，例如「平静」 */
+  mood?: string;
+  tags: string[];
+  draft: boolean;
+};
+
+/** 日记完整内容 */
+export type DiaryEntry = DiaryMeta & {
+  html: string;
+  headings: TocItem[];
+};
+
+export const GOAL_HORIZONS = ["short", "mid", "long"] as const;
+export type GoalHorizon = (typeof GOAL_HORIZONS)[number];
+
+export const GOAL_STATUSES = ["planned", "active", "done", "paused"] as const;
+export type GoalStatus = (typeof GOAL_STATUSES)[number];
+
+export type GoalMilestone = {
+  title: string;
+  done: boolean;
+};
+
+/**
+ * 目标（content/goals/*.md）。
+ *
+ * 注意 `progress`：内容里默认是 `0`，代表「尚未开始 / 还没填」，
+ * 不表示任何真实完成度 —— 请自行填写真实进度。
+ */
+export type Goal = {
+  slug: string;
+  title: string;
+  horizon: GoalHorizon;
+  status: GoalStatus;
+  /** 0-100 的整数 */
+  progress: number;
+  /** 时间范围，如 2026 Q4 */
+  period?: string;
+  order: number;
+  milestones: GoalMilestone[];
+  html: string;
+  headings: TocItem[];
+};

@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import CosmicLink from "@/components/cosmic/CosmicLink";
 import { Chip } from "@/components/ui/Badge";
 import { ArrowRightIcon, CalendarIcon, ClockIcon, FolderIcon } from "@/components/ui/Icons";
 import { formatDate } from "@/lib/format";
@@ -25,9 +24,9 @@ export default function PostCard({ post }: { post: PostMeta }) {
       </div>
 
       <h3 className="mt-3 text-base font-semibold tracking-tight text-foreground sm:text-lg">
-        <Link href={`/blog/${post.slug}`} className="after:absolute after:inset-0">
+        <CosmicLink href={`/blog/${post.slug}`} className="after:absolute after:inset-0">
           {post.title}
-        </Link>
+        </CosmicLink>
       </h3>
 
       <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">

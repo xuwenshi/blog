@@ -61,7 +61,9 @@ export const siteConfig: SiteConfig = {
   tagline: "用数据与代码解决真实世界的问题。",
   description:
     "个人技术博客与项目作品集：记录机器学习、数据挖掘、RAG 与 LLM 工程实践中的问题、原理、实验与踩坑。",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://luoxu-blog.vercel.app",
+  // 兜底域名必须是真实可访问的生产域名，否则 canonical / Open Graph / sitemap
+  // 会指向一个 404 的地址。绑定自定义域名后请用 NEXT_PUBLIC_SITE_URL 覆盖。
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog-xuwenshi.vercel.app",
   email: "luoxu@example.com",
   location: "中国",
   github: "https://github.com/luoxu",

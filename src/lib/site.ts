@@ -62,8 +62,10 @@ export const siteConfig: SiteConfig = {
   description:
     "个人技术博客与项目作品集：记录机器学习、数据挖掘、RAG 与 LLM 工程实践中的问题、原理、实验与踩坑。",
   // 兜底域名必须是真实可访问的生产域名，否则 canonical / Open Graph / sitemap
-  // 会指向一个 404 的地址。绑定自定义域名后请用 NEXT_PUBLIC_SITE_URL 覆盖。
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog-xuwenshi.vercel.app",
+  // 会指向一个 404 的地址。换绑域名时请用 NEXT_PUBLIC_SITE_URL 覆盖。
+  // 说明：vercel.app 子域在国内被 DNS 投毒 + TLS SNI 阻断，故生产入口改用
+  // is-a.dev 自定义域（A 记录 216.198.79.1 指向同一个 Vercel 项目）。
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://loxander.is-a.dev",
   email: "luoxu@example.com",
   location: "中国",
   github: "https://github.com/luoxu",

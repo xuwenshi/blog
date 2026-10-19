@@ -55,8 +55,8 @@ export type SiteConfig = {
 };
 
 export const siteConfig: SiteConfig = {
-  name: "luoxu.dev",
-  author: "luoxu",
+  name: "Loxander",
+  author: "Loxander",
   role: "数据科学与机器学习工程师",
   tagline: "用数据与代码解决真实世界的问题。",
   description:
@@ -66,12 +66,12 @@ export const siteConfig: SiteConfig = {
   // 说明：vercel.app 子域在国内被 DNS 投毒 + TLS SNI 阻断，故生产入口改用
   // is-a.dev 自定义域（A 记录 216.198.79.1 指向同一个 Vercel 项目）。
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://loxander.is-a.dev",
-  email: "luoxu@example.com",
+  email: "2027358278@qq.com",
   location: "中国",
-  github: "https://github.com/luoxu",
+  github: "https://github.com/xuwenshi",
 
   bio: [
-    "我是 luoxu，关注数据科学与机器学习在真实业务中的落地。",
+    "我是 Loxander，关注数据科学与机器学习在真实业务中的落地。",
     "过去几年做过农业数据挖掘、特征工程与模型评估相关的工作，习惯把「问题 → 原理 → 实现 → 实验 → 结论」完整记录下来。",
     "这个博客既是我的学习笔记，也是我的项目作品集：每个项目都会说明为什么这样设计、解决了什么问题、以及最终效果。",
   ],
@@ -109,8 +109,8 @@ export const siteConfig: SiteConfig = {
   ],
 
   socials: [
-    { label: "GitHub", href: "https://github.com/luoxu" },
-    { label: "Email", href: "mailto:luoxu@example.com" },
+    { label: "GitHub", href: "https://github.com/xuwenshi" },
+    { label: "Email", href: "mailto:2027358278@qq.com" },
   ],
 
   resumePdfAvailable: false,

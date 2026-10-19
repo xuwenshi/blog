@@ -5,7 +5,7 @@ techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Shiki", "Markdown"]
 status: "active"
 period: "2026.09 - 至今"
 role: "设计与开发"
-github: "https://github.com/luoxu"
+github: "https://github.com/xuwenshi"
 article: "build-personal-blog-with-nextjs"
 featured: true
 order: 1

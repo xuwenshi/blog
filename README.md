@@ -1,4 +1,4 @@
-# luoxu.dev · 个人技术博客
+# Loxander · 个人技术博客
 
 一个用 **Next.js + TypeScript + Tailwind CSS + Markdown** 搭建的**宇宙主题**个人技术博客与作品集。
 
@@ -222,7 +222,7 @@ git push -u origin main
 
 ### 3. 绑定自定义域名
 
-1. 在域名服务商购买域名（如 `luoxu.dev`）
+1. 在域名服务商购买域名（本项目实际用的是免费子域 `loxander.is-a.dev`）
 2. 在 Vercel 项目的 **Settings → Domains** 添加该域名
 3. 按提示到域名服务商添加 DNS 记录：通常根域名用 A 记录、`www` 用 CNAME
 4. 等待 DNS 生效，Vercel 会自动签发并续期 HTTPS 证书
